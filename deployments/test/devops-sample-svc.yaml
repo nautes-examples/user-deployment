@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kubesphere
+    component: ks-sample-dev
+  name: ks-sample-dev
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: kubesphere
+    component: ks-sample-dev
+    tier: backend
+  sessionAffinity: None
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ks-sample-dev
+spec:
+  rules:
+  - host: devops-sample.$cluster-ip.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: ks-sample-dev
+            port: 
+              number: 8080
